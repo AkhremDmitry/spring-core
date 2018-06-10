@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+ 		http://www.springframework.org/schema/context/spring-context-3.2.xsd
  		http://www.springframework.org/schema/beans
- 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+ 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <import resource="loggers.xml"/>
     <import resource="others.xml"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.epam.courses"/>
 
-    <bean id="app" class="com.epam.courses.App">
-        <constructor-arg ref="client"/>
+    <bean id="map" class="java.util.HashMap">
         <constructor-arg>
-            <map>
+            <map key-type="com.epam.courses.loggers.EventType" value-type="com.epam.courses.loggers.EventLogger">
                 <entry key="INFO" value-ref="consoleEventLogger"/>
                 <entry key="ERROR" value-ref="combinedEventLogger"/>
             </map>
         </constructor-arg>
-        <property name="defaultLogger" ref="fileEventLogger"/>
+    </bean>
+
+    <bean id="app" class="com.epam.courses.App">
+        <constructor-arg ref="client"/>
+        <constructor-arg ref="map"/>
+        <!--<constructor-arg>-->
+            <!--<map>-->
+                <!--<entry key="INFO" value-ref="consoleEventLogger"/>-->
+                <!--<entry key="ERROR" value-ref="combinedEventLogger"/>-->
+            <!--</map>-->
+        <!--</constructor-arg>-->
+    </bean>
+
+    <bean name="someComponent" class="com.epam.courses.SomeComponent"
+          init-method="init" destroy-method="close"
+          lazy-init="true" scope="prototype" >
+    </bean>
+
+    <bean name="someService" class="com.epam.courses.SomeService"
+          init-method="init" destroy-method="close" >
+        <constructor-arg ref="someComponent"/>
     </bean>
 </beans>

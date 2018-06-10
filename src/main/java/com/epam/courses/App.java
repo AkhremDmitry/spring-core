@@ -2,7 +2,8 @@ package com.epam.courses;
 
 import com.epam.courses.loggers.EventLogger;
 import com.epam.courses.loggers.EventType;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -13,6 +14,8 @@ public class App {
 
     private Client client;
     private Map<EventType, EventLogger> eventLoggers;
+    @Autowired
+    @Qualifier("consoleEventLogger")
     private EventLogger defaultLogger;
     private static ConfigurableApplicationContext applicationContext;
 
